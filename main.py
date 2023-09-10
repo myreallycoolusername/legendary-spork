@@ -21,14 +21,14 @@ async def generate():
     filename = f"{uuid.uuid4()}.png"
     
     # Save the image to the static folder
-    filepath = os.path.join('static', filename)
+    filepath = os.path.join('img', filename)
     img.save(filepath)
 
     # Schedule the deletion of the image file after 5 minutes
     executor.submit(delete_image, filepath, delay=300)
 
     # Redirect the user to the URL of the saved image
-    return redirect(url_for('static', filename=filename))
+    return redirect(url_for('img', filename=filename))
 
 def delete_image(filepath, delay):
     time.sleep(delay)
@@ -36,5 +36,5 @@ def delete_image(filepath, delay):
         os.remove(filepath)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(url='0.0.0.0', port=3000)
     
