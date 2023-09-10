@@ -1,9 +1,10 @@
-from flask import Flask, request, send_file
+import os
+import time
+from flask import Flask, request, send_file, redirect, url_for
 from flask_executor import Executor
 import freeGPT
 from PIL import Image
 from io import BytesIO
-import os
 import uuid
 
 app = Flask(__name__)
@@ -18,18 +19,22 @@ async def generate():
     
     # Generate a random string for the filename
     filename = f"{uuid.uuid4()}.png"
-    img.save(filename)
+    
+    # Save the image to the static folder
+    filepath = os.path.join('static', filename)
+    img.save(filepath)
 
     # Schedule the deletion of the image file after 5 minutes
-    executor.submit(delete_image, filename, delay=300)
+    executor.submit(delete_image, filepath, delay=300)
 
-    # Send the image file to the user
-    response = send_file(filename, mimetype='image/png')
-    return response
+    # Redirect the user to the URL of the saved image
+    return redirect(url_for('static', filename=filename))
 
-def delete_image(filename, delay):
+def delete_image(filepath, delay):
     time.sleep(delay)
-    os.remove(filename)
+    if os.path.exists(filepath):
+        os.remove(filepath)
 
 if __name__ == '__main__':
     app.run()
+    
