@@ -36,5 +36,5 @@ def delete_image(filepath, delay):
         os.remove(filepath)
 
 if __name__ == '__main__':
-    app.run(url='0.0.0.0', port=3000)
+    app.run(host='0.0.0.0', port=3000)
     
