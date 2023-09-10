@@ -20,6 +20,9 @@ async def generate():
     # Generate a random string for the filename
     filename = f"{uuid.uuid4()}.png"
     
+    # Ensure the static folder exists
+    os.makedirs('static', exist_ok=True)
+    
     # Save the image to the static folder
     filepath = os.path.join('static', filename)
     img.save(filepath)
@@ -34,6 +37,7 @@ def delete_image(filepath, delay):
     time.sleep(delay)
     if os.path.exists(filepath):
         os.remove(filepath)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
